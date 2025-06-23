@@ -79,22 +79,25 @@ Definition size_def:
   (size (Tif b t e) = 1 + size b + size t + size e)
 End
 
-Definition reduces_def:
-
-  (reduces (Tsucc t)            (Tsucc u)   = reduces t u                 ) /\
-
-  (reduces (Tpred t)             T0         = T                           ) /\
-  (reduces (Tpred (Tsucc t))     u          = (valN t) and (t == u)            ) 
+(* Inductive reduce:
+  [reduce_Succ:] (reduce (Tpred T0) T0) *)
+  (* [ E_Succ      :] !t u     . reduce t u  ==>  reduce (Tpred t)                 T0 *)
 (* 
-  (reduces (Tpred t)            (Tpred u)   = reduces t u && not (valN t) ) /\
+  [~ E_PredZero  :]                             reduce (Tpred T0        )        T0
+  [~ E_PredSucc  :] ! nv     . valN nv     ==>  reduce (Tpred (Tsucc nv))        nv
+  [~ E_Pred      :] ! nv u   . reduce nv u ==>  reduce (Tpred nv        )       (Tpred u)
+    
+  [~ E_iszeroZero:]                             reduce (Tis0 T0)                 Ttrue
+  [~ E_iszeroSucc:] ! nv     . valN nv     ==>  reduce (Tis0 (Tsucc nv) )        Tfalse
+  [~ E_iszero    :] ! nv u   . reduce nv u ==>  reduce (Tis0 nv         )       (Tis0 u)
+    
+  [~ E_ifTrue    :] ! t e    .                  reduce (Tif Ttrue  t e  )        t
+  [~ E_iffalse   :] ! t e    .                  reduce (Tif Tfalse t e  )        e
+  [~ E_if        :] ! b c t e. reduce b  c ==>  reduce (Tif b      t e  )       (Tif c t e) *)
+(* End *)
 
-  (reduces (Tis0 t)              T0         = T                           ) /\
-  (reduces (Tis0  (Tsucc t))     Tfalse     = valN t                      ) /\
-  (reduces (Tis0 t)             (Tis0  u)   = reduces t u && not (valN t) ) /\
 
-  (reduces (Tif Ttrue  t _)      u          = t == u                      ) /\
-  (reduces (Tif Tfalse _ e)      u          = e == u                      ) /\
-  (reduces (Tif b      t e)     (Tif c t e) = e == u                      ) /\
-
-  (reduces _ _  = F) *)
+Inductive foo:
+[foo_A:]
+  foo 1 2
 End
